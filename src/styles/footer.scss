@@ -1,0 +1,47 @@
+.footer {
+    color: #1a1919;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    z-index: 33;
+
+    .footers {
+        width: 100%;
+        height: 64px;
+        border-top: 1px solid #CBD0DD;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 45px;
+        position: absolute;
+        top: 650px;
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            button {
+                cursor: pointer;
+                background-color: white;
+                border: none;
+            }
+        }
+
+        .text {
+            p {
+                width: 567px;
+                height: 24px;
+                font-weight: 400;
+                font-size: 16px;
+                color: #31374A;
+            }
+
+            span {
+                font-weight: 500;
+                font-size: 23px;
+                color: #3874FF;
+            }
+        }
+    }
+}

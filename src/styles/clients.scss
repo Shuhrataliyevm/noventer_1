@@ -1,0 +1,155 @@
+.clients-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.clients-table {
+    width: 1000px;
+    height: 500px;
+    cursor: pointer;
+    overflow-x: auto;
+    position: absolute;
+    top: 110px;
+    left: 400px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+thead {
+    background-color: #f9f9f9;
+    color: #666;
+    font-weight: 500;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+th,
+td {
+    padding: 15px 10px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+}
+
+th {
+    font-weight: 600;
+}
+
+.checkbox-column {
+    width: 40px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.name-column {
+    width: 200px;
+}
+
+.license-column {
+    color: #5c85d6;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.date-column {
+    color: #999;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.client-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+tbody tr {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #f9f9f9;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.pagination-info {
+    flex: 1;
+}
+
+.view-all {
+    margin-right: 20px;
+    color: #5c85d6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    .chevron {
+        margin-left: 5px;
+    }
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    .pagination-number,
+    .pagination-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 4px;
+        color: #666;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+
+        &.active {
+            background-color: #5c85d6;
+            color: white;
+        }
+    }
+
+    .avatar-fallback {
+        font-size: 18px;
+        color: white;
+        font-weight: bold;
+    }
+}

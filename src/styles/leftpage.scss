@@ -1,0 +1,33 @@
+.LeftPages {
+    width: 264px;
+    height: 680px;
+    border-right: 1px solid #CBD0DD;
+
+    .pages {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .link {
+            position: relative;
+            top: 50px;
+
+            a:active{
+                color: blue;
+            }
+
+            a {
+                text-decoration: none;
+
+                p {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color:#525B75; 
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+}

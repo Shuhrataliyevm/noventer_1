@@ -1,0 +1,340 @@
+.about-container {
+    max-width: 1520px;
+    margin: 0 auto;
+    min-height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+
+    .hero-section {
+        text-align: center;
+        padding: 4rem 2rem;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        animation: slideIn 0.8s ease-out;
+
+        h1 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+    }
+
+    .carousel-section {
+        margin: 3rem 0;
+        padding: 2rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        animation: slideIn 0.8s ease-out;
+
+        h2 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100px;
+                height: 3px;
+                background: linear-gradient(90deg, #667eea, #764ba2);
+            }
+        }
+        .carousel {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+
+            div {
+                flex: 0 0 auto;
+                min-width: 300px;
+                background: #ffffff;
+                border-radius: 20px;
+                padding: 1.5rem;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                scroll-snap-align: start;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                cursor: pointer;
+
+                h1 {
+                    font-size: 1.5rem;
+                    margin-bottom: 0.5rem;
+                    color: #333;
+                }
+
+                h3 {
+                    font-size: 1.2rem;
+                    margin-bottom: 1rem;
+                    color: #555;
+                }
+
+                p {
+                    font-size: 1rem;
+                    color: #666;
+                    line-height: 1.5;
+                }
+
+                &:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+                }
+            }
+
+            &::-webkit-scrollbar {
+                height: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        }
+
+
+        .carousel-item {
+            flex: 0 0 350px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            &:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .item-image {
+                width: 100%;
+                height: 200px;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+
+            .item-icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1rem;
+                color: #667eea;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+                color: #2d3748;
+                margin: 1rem;
+                text-align: center;
+            }
+
+            p {
+                color: #4a5568;
+                margin: 0 1rem 1rem;
+                line-height: 1.6;
+            }
+
+            .skills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 0 1rem 1rem;
+
+                .skill-tag {
+                    background: #e2e8f0;
+                    color: #4a5568;
+                    padding: 0.3rem 0.8rem;
+                    border-radius: 20px;
+                    font-size: 0.9rem;
+                }
+            }
+
+            .social-links {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                padding: 1rem;
+                border-top: 1px solid #e2e8f0;
+
+                a {
+                    color: #667eea;
+                    font-size: 1.5rem;
+                    transition: color 0.3s ease;
+
+                    &:hover {
+                        color: #764ba2;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.faq-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    animation: slideIn 0.8s ease-out;
+
+    h2 {
+        font-size: 2.5rem;
+        color: #2d3748;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+    }
+
+    .accordion {
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+            .accordion-header {
+                padding: 1.5rem;
+                background: #f7fafc;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background: #edf2f7;
+                }
+
+                &.active {
+                    background: #667eea;
+                    color: white;
+
+                    .icon {
+                        transform: rotate(180deg);
+                    }
+                }
+
+                h3 {
+                    font-size: 1.2rem;
+                    margin: 0;
+                }
+
+                .icon {
+                    transition: transform 0.3s ease;
+                }
+            }
+
+            .accordion-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease, padding 0.3s ease;
+                background: white;
+
+                &.active {
+                    max-height: 500px;
+                    padding: 1.5rem;
+                }
+
+                p {
+                    color: #4a5568;
+                    line-height: 1.6;
+                    margin: 0;
+                }
+            }
+        }
+    }
+}
+
+
+@media (max-width: 768px) {
+    .about-container {
+        padding: 1rem;
+
+        .hero-section {
+            padding: 2rem 1rem;
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+
+        .carousel-section {
+            padding: 1rem;
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .carousel {
+                .carousel-item {
+                    flex: 0 0 280px;
+                }
+            }
+        }
+
+        .faq-section {
+            padding: 1rem;
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .accordion {
+                .accordion-item {
+                    .accordion-header {
+                        padding: 1rem;
+
+                        h3 {
+                            font-size: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
