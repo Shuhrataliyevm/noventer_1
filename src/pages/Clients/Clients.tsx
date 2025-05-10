@@ -49,6 +49,7 @@ const Clients = () => {
     const [selectAll, setSelectAll] = useState(false);
     const [selectedClients, setSelectedClients] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [branchIdFilter, setBranchIdFilter] = useState<number | null>(null); // 🔹 YANGI
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -62,9 +63,9 @@ const Clients = () => {
                 console.error('Error fetching clients:', error);
                 const mockClients: Client[] = Array(10).fill(null).map((_, index) => ({
                     id: index + 1,
-                    branch: 1,
-                    branch_name: "Head Office",
-                    name: "Carry Anna",
+                    branch: index % 3, // 🔹 3 xil branch uchun mock
+                    branch_name: ["Head Office", "Branch A", "Branch B"][index % 3],
+                    name: `Carry Anna ${index + 1}`,
                     phone: "+998 (93) 954-21-11",
                     avatar: `https://i.pravatar.cc/100?img=${index + 10}`,
                     license_file: null,
@@ -79,16 +80,20 @@ const Clients = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        if (searchQuery === "") {
-            setFilteredClients(clients);
-        } else {
-            setFilteredClients(
-                clients.filter(client =>
-                    client.name.toLowerCase().includes(searchQuery.toLowerCase())
-                )
+        let result = clients;
+
+        if (searchQuery) {
+            result = result.filter(client =>
+                client.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
-    }, [searchQuery, clients]);
+
+        if (branchIdFilter !== null) {
+            result = result.filter(client => client.branch === branchIdFilter);
+        }
+
+        setFilteredClients(result);
+    }, [searchQuery, branchIdFilter, clients]);
 
     const handleSelectAll = (checked: boolean) => {
         setSelectAll(checked);
@@ -116,21 +121,38 @@ const Clients = () => {
         setSearchQuery(e.target.value);
     };
 
+    const handleBranchFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = e.target.value;
+        setBranchIdFilter(selected === "all" ? null : parseInt(selected));
+    };
+
     return (
         <div className="clients-container">
             <Header />
             <LeftPage />
-            <div className="input">
-                <form className="from">
-                    <input
-                        type="text"
-                        placeholder="Search by name"
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                    />
-                </form>
-                <div className="add-btn">
-                    <button>+ Mijoz qo'shish</button>
+            <div className="newinput">
+                <div className="input">
+                    <form className="from">
+                        <input
+                            type="text"
+                            placeholder="Search by name"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                        />
+                        <div className="select">
+                            <select onChange={handleBranchFilterChange}>
+                                <option value="all">Barcha filiallar</option>
+                                {[...new Set(clients.map(c => c.branch))].map((branchId) => (
+                                    <option key={branchId} value={branchId}>
+                                        {clients.find(c => c.branch === branchId)?.branch_name || `Filial ${branchId}`}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </form>
+                    <div className="add-btn">
+                        <button>+ Mijoz qo'shish</button>
+                    </div>
                 </div>
             </div>
             <div className="clients-table">

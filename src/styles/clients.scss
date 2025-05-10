@@ -15,24 +15,51 @@
     position: absolute;
     top: 150px;
     left: 300px;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
 }
 
 .input {
     display: flex;
     align-items: center;
-    gap: 44rem;
+    gap: 2rem;
     position: absolute;
     top: 100px;
     left: 300px;
+    z-index: 77;
+    background-color: white;
 
     .from {
+        display: flex;
+        align-items: center;
+        gap: 32rem;
+
         input {
             width: 320px;
             height: 38px;
             border-radius: 6px;
             border: 1px solid #CBD0DD;
             color: #8A94AD;
-            padding: 20px;
+            padding: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+
+            &:focus {
+                border-color: #3874FF;
+            }
+
+            &::placeholder {
+                color: #A0A0A0;
+            }
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 180px;
+            cursor: pointer;
         }
     }
 
@@ -44,6 +71,11 @@
         background-color: #3874FF;
         color: white;
         cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: #2864D9;
+        }
     }
 }
 
@@ -165,6 +197,7 @@ tbody tr {
         cursor: pointer;
         border-radius: 4px;
         color: #666;
+        transition: background-color 0.3s ease;
 
         &:hover {
             background-color: #f0f0f0;

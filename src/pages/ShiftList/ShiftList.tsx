@@ -19,13 +19,51 @@ interface Shift {
 const Shifts = () => {
     const [shifts, setShifts] = useState<Shift[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [branchFilter, setBranchFilter] = useState<number | "">("");
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
+
+    const axiosInstance = axios.create({
+        baseURL: "https://api.noventer.uz/api/v1",
+    });
+
+    axiosInstance.interceptors.request.use((config) => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    });
+
+    axiosInstance.interceptors.response.use(
+        (res) => res,
+        async (error) => {
+            const originalRequest = error.config;
+            if (error.response?.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                const refreshToken = localStorage.getItem("refresh_token");
+
+                try {
+                    const { data } = await axios.post(
+                        "https://api.noventer.uz/api/v1/auth/jwt/refresh/",
+                        { refresh: refreshToken }
+                    );
+                    localStorage.setItem("access_token", data.access);
+                    originalRequest.headers.Authorization = `Bearer ${data.access}`;
+                    return axios(originalRequest);
+                } catch (err) {
+                    console.error("Refresh token expired or error:", err);
+                    return Promise.reject(err);
+                }
+            }
+            return Promise.reject(error);
+        }
+    );
 
     const fetchShifts = async () => {
         try {
             const access_token = localStorage.getItem("access_token");
-            const response = await axios.get(
+            const response = await axiosInstance.get(
                 "https://api.noventer.uz/api/v1/company/shifts/1/",
                 {
                     headers: {
@@ -49,11 +87,11 @@ const Shifts = () => {
             .getDate()
             .toString()
             .padStart(2, "0")}-${(date.getMonth() + 1)
-                .toString()
-                .padStart(2, "0")}-${date.getFullYear()} ${date
-                    .getHours()
-                    .toString()
-                    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+            .toString()
+            .padStart(2, "0")}-${date.getFullYear()} ${date
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
     };
 
     const handleDelete = async (id: number) => {
@@ -61,13 +99,16 @@ const Shifts = () => {
         if (confirmed) {
             try {
                 const access_token = localStorage.getItem("access_token");
-                await axios.delete(`https://api.noventer.uz/api/v1/company/shifts/${id}/`, {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`,
-                    },
-                });
+                await axiosInstance.delete(
+                    `https://api.noventer.uz/api/v1/company/shifts/${id}/`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${access_token}`,
+                        },
+                    }
+                );
                 alert("Shift deleted successfully!");
-                fetchShifts(); // Refresh data after delete
+                fetchShifts(); 
             } catch (error) {
                 console.error("Error deleting shift:", error);
             }
@@ -75,13 +116,12 @@ const Shifts = () => {
     };
 
     const handleEdit = (id: number) => {
-        // You can implement a modal for editing a shift
         alert(`Edit functionality for shift ${id} would go here.`);
-        // For now, we'll just alert which shift was selected for editing.
     };
 
     const filteredShifts = shifts.filter((shift) =>
-        shift.name.toLowerCase().includes(searchQuery.toLowerCase())
+        shift.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (branchFilter ? shift.branch === branchFilter : true)
     );
 
     const indexOfLastShift = currentPage * itemsPerPage;
@@ -111,21 +151,34 @@ const Shifts = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
+                    <select
+                        className="branch-select"
+                        value={branchFilter}
+                        onChange={(e) => setBranchFilter(Number(e.target.value) || "")}
+                    >
+                        <option value="">All Branches</option>
+                        {shifts.map((shift) => (
+                            <option key={shift.branch} value={shift.branch}>
+                                {shift.branch_name}
+                            </option>
+                        ))}
+                    </select>
                 </form>
                 <div className="add-btn">
-                    <button>+ Smena qo'shish</button>
+                    <button>+ Add Shift</button>
                 </div>
             </div>
+
             <div className="newtable">
                 <div className="shifts-table">
                     <table>
                         <thead>
                             <tr>
-                                <th>Smena Nomi</th>
-                                <th>Filial</th>
-                                <th>Boshlanish Vaqti</th>
-                                <th>Tugash Vaqti</th>
-                                <th>Yaratilgan sana</th>
+                                <th>Shift Name</th>
+                                <th>Branch</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Created At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
