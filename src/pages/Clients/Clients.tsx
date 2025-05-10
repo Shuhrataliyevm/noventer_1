@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Pagination } from "antd";
 import "../../styles/clients.scss";
 import axios from "axios";
 import Header from "../Header/header";
 import Footer from "../Footer/footer";
 import LeftPage from "../LeftPage/leftpage";
+
 interface Client {
     id: number;
     branch: number | null;
@@ -43,10 +43,12 @@ const Avatar = ({ src, alt }: { src: string | null, alt: string, name: string })
 
 const Clients = () => {
     const [clients, setClients] = useState<Client[]>([]);
+    const [filteredClients, setFilteredClients] = useState<Client[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedClients, setSelectedClients] = useState<number[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -76,6 +78,18 @@ const Clients = () => {
         fetchClients();
     }, [currentPage]);
 
+    useEffect(() => {
+        if (searchQuery === "") {
+            setFilteredClients(clients);
+        } else {
+            setFilteredClients(
+                clients.filter(client =>
+                    client.name.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+            );
+        }
+    }, [searchQuery, clients]);
+
     const handleSelectAll = (checked: boolean) => {
         setSelectAll(checked);
         setSelectedClients(checked ? clients.map(client => client.id) : []);
@@ -98,11 +112,27 @@ const Clients = () => {
         setCurrentPage(page);
     };
 
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+    };
+
     return (
         <div className="clients-container">
             <Header />
             <LeftPage />
-
+            <div className="input">
+                <form className="from">
+                    <input
+                        type="text"
+                        placeholder="Search by name"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                    />
+                </form>
+                <div className="add-btn">
+                    <button>+ Mijoz qo'shish</button>
+                </div>
+            </div>
             <div className="clients-table">
                 <table>
                     <thead>
@@ -122,7 +152,7 @@ const Clients = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {clients.map((client) => (
+                        {filteredClients.map((client) => (
                             <tr key={client.id}>
                                 <td className="checkbox-column">
                                     <Checkbox

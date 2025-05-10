@@ -9,13 +9,43 @@
 }
 
 .clients-table {
-    width: 1000px;
+    width: 1210px;
     height: 500px;
     cursor: pointer;
     overflow-x: auto;
     position: absolute;
-    top: 110px;
-    left: 400px;
+    top: 150px;
+    left: 300px;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    gap: 44rem;
+    position: absolute;
+    top: 100px;
+    left: 300px;
+
+    .from {
+        input {
+            width: 320px;
+            height: 38px;
+            border-radius: 6px;
+            border: 1px solid #CBD0DD;
+            color: #8A94AD;
+            padding: 20px;
+        }
+    }
+
+    button {
+        width: 156px;
+        height: 38px;
+        border-radius: 6px;
+        border: none;
+        background-color: #3874FF;
+        color: white;
+        cursor: pointer;
+    }
 }
 
 table {
