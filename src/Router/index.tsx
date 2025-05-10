@@ -11,6 +11,7 @@ import LeftPage from "../pages/LeftPage/leftpage";
 import Employe from "../pages/Employe/employe";
 import Clients from "../pages/Clients/Clients";
 import ShiftList from "../pages/ShiftList/ShiftList";
+import Staff from "../pages/Staff/Staff";
 
 const Router = () => {
     return (
@@ -23,6 +24,7 @@ const Router = () => {
             <Route path="/employe" element={<Employe />} />
             <Route path="/clients" element={<Clients />} />
             <Route path="/shiftlist" element={<ShiftList />} />
+            <Route path="/staff" element={<Staff />} />
 
             <Route path="/" element={<PrivateRoute />}>
                 <Route path="/login" element={<Login />} />

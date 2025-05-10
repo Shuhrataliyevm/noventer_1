@@ -11,6 +11,7 @@ import LeftPage from './pages/LeftPage/leftpage';
 import Employe from './pages/Employe/employe';
 import Clients from './pages/Clients/Clients';
 import ShiftList from './pages/ShiftList/ShiftList';
+import Staff from './pages/Staff/Staff';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -73,6 +74,14 @@ const App = () => {
                     element={
                         <ProtectedRoute>
                             <Clients />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/staff"
+                    element={
+                        <ProtectedRoute>
+                            <Staff />
                         </ProtectedRoute>
                     }
                 />
