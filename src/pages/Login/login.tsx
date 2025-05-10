@@ -2,21 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setTokens } from "../../utils/auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
 import { toast } from "sonner";
 import "./login.scss";
 
 interface LoginFormData {
     phone_number: string;
     password: string;
-}
-
-interface LoginResponse {
-    message: any;
-    detail: any;
-    id: number;
-    phone_number: string;
-    tokens: string;
 }
 
 const Login: React.FC = () => {
@@ -60,14 +51,21 @@ const Login: React.FC = () => {
                 }),
             });
 
-            const data: LoginResponse = await res.json();
+            const data = await res.json();
+            console.log("Login response data:", data);
 
             if (!res.ok) {
                 const errorMessage = data.detail || data.message || "Telefon yoki parol noto‘g‘ri!";
                 throw new Error(errorMessage);
             }
 
-            setTokens(data.tokens, data.tokens);
+            if (data?.data?.tokens?.access && data?.data?.tokens?.refresh) {
+                setTokens(data.data.tokens.access, data.data.tokens.refresh);
+            } else {
+                console.log("Token structure incorrect:", data);
+                throw new Error("Tokenlar yo‘q. Iltimos backend javobini tekshiring.");
+            }
+
             localStorage.setItem("phone", formData.phone_number);
             toast.success("Muvaffaqiyatli kirdingiz!");
             navigate("/");
@@ -129,7 +127,6 @@ const Login: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-
 
                         {error && <p className="error-message">{error}</p>}
 
