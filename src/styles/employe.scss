@@ -6,7 +6,7 @@
     padding: 0;
     position: absolute;
     left: 300px;
-    top: 50px;
+    top: 60px;
 
     .profile-header {
         background-image: url('/icons/TEXTURE.svg');
@@ -16,6 +16,19 @@
         margin-bottom: 20px;
         overflow: hidden;
         position: relative;
+        z-index: -5;
+    }
+
+    .img {
+        position: absolute;
+        top: -21px;
+        left: 49px;
+        z-index: -3;
+
+        img {
+            width: 290px;
+            height: 290px;
+        }
     }
 
     .profile-info {
@@ -36,6 +49,7 @@
         height: 70px !important;
         background: white;
         border: 2px solid rgba(255, 255, 255, 0.7);
+        cursor: pointer;
     }
 
     .profile-name-section {
@@ -47,11 +61,15 @@
         font-size: 0.9rem;
         opacity: 0.9;
         margin-bottom: 5px;
+        color: #FFFFFFFF;
     }
 
     .profile-name {
+        width: 272px;
+        height: 49px;
+        color: #FFFFFFFF;
         font-size: 1.8rem;
-        font-weight: 600;
+        font-weight: 700;
         margin: 0 0 5px 0;
     }
 
@@ -67,19 +85,27 @@
     }
 
     .finance-card {
-        background: linear-gradient(135deg, #B7B7B74D 0%, #FFFFFF6B);
-        border-radius: 12px;
-        padding: 20px;
-        max-width: 300px;
-        border: 1px solid #B7B7B74D;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
-        color: white;
+        background-color: rgba(237, 237, 238, 0);
+        border: none;
+        z-index: 6;
+
+        .finance-content {
+            width: 267px;
+            height: 135px;
+            background: linear-gradient(135deg, #B7B7B74D 0%, #FFFFFF6B);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 300px;
+            border: 1px solid #B7B7B74D;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            color: white;
+            display: flex;
+            position: relative;
+            left: -20px;
+            flex-direction: column;
+        }
     }
 
-    .finance-content {
-        display: flex;
-        flex-direction: column;
-    }
 
     .finance-title {
         font-size: 0.9rem;
@@ -101,6 +127,8 @@
     .finance-balance {
         font-size: 1.8rem;
         font-weight: 600;
+        position: relative;
+        top: -5px;
     }
 
     .stats-section {
@@ -113,11 +141,11 @@
     .stat-card {
         width: 250px;
         height: 104px;
-        background-color: white;
         padding: 20px;
         border-radius: 12px;
         border: 1px solid rgba(0, 0, 0, 0.05);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        cursor: pointer;
         transition: transform 0.2s;
 
         &:hover {
@@ -146,6 +174,11 @@
         gap: 80px;
         font-size: 0.9rem;
         color: #6B7280;
+
+        span{
+            position: relative;
+            left: -25px;
+        }
 
     }
 
@@ -191,14 +224,14 @@
         left: 15px;
         gap: 10px;
         align-items: center;
-    }
 
-    .info-icon {
-        color: #6B7280;
-        width: 20px;
-        height: 20px;
-        position: relative;
-        top: -3px;
+        img{
+            width: 20px;
+            height: 20px;
+            position: relative;
+            top: -3px;
+            left: 5px;
+        }
     }
 
     .info-title {
@@ -217,6 +250,7 @@
     }
 
     .info-column {
+        gap: 10px;
         display: flex;
         flex-direction: column;
     }

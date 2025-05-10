@@ -4,7 +4,7 @@
     flex-direction: column;
     gap: 2rem;
     z-index: 33;
-
+    
     .footers {
         width: 1480px;
         height: 64px;
@@ -14,14 +14,16 @@
         justify-content: space-between;
         padding: 45px;
         position: absolute;
-        top: 650px;
+        top: 630px;
 
         .btn {
             display: flex;
             align-items: center;
-            gap: 5px;
-
+            
             button {
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 cursor: pointer;
                 background-color: white;
                 border: none;

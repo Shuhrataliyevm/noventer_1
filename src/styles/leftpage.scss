@@ -1,6 +1,6 @@
 .LeftPages {
     width: 264px;
-    height: 590px;
+    height: 670px;
     border-right: 1px solid #CBD0DD;
 
     .pages {
@@ -10,15 +10,22 @@
         flex-direction: column;
 
         .link {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             position: relative;
             top: 50px;
 
-            a:active{
+            link:active{
                 color: blue;
             }
 
             a {
                 text-decoration: none;
+
+                &:active {
+                    color: blue;
+                }
 
                 p {
                     display: flex;

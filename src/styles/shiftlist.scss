@@ -1,0 +1,39 @@
+.shifts-container {
+    padding: 1rem;
+    .input {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .from input {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .add-btn button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    }
+
+    .shifts-table {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            th, td {
+                padding: 0.75rem;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #f5f5f5;
+            }
+        }
+    }
+}

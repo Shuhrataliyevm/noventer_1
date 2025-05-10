@@ -10,6 +10,7 @@ import Header from './pages/Header/header';
 import LeftPage from './pages/LeftPage/leftpage';
 import Employe from './pages/Employe/employe';
 import Clients from './pages/Clients/Clients';
+import ShiftList from './pages/ShiftList/ShiftList';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -56,6 +57,14 @@ const App = () => {
                     element={
                         <ProtectedRoute>
                             <Employe />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/shiftlist"
+                    element={
+                        <ProtectedRoute>
+                            <ShiftList />
                         </ProtectedRoute>
                     }
                 />

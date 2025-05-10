@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { List, Coins, Calendar, Info, Badge } from "lucide-react";
 import "../../styles/employe.scss";
 
 import axios from "axios";
@@ -30,7 +29,7 @@ const Employe = () => {
     useEffect(() => {
         const fetchClient = async () => {
             try {
-                const response = await axios.get('https://api.noventer.uz/api/v1/accounts/me/');
+                const response = await axios.get('/accounts/me/');
                 setClient(response.data);
                 setLoading(false);
             } catch (error) {
@@ -71,13 +70,12 @@ const Employe = () => {
     return (
         <div className="client-profile">
             <div className="profile-header">
-                <img src="/icons/Group 313.svg" alt="#" />
                 <div className="profile-info">
                     <div className="profile-avatar-section">
                         <img src="/icons/avatar.svg" alt="#" />
                         <div className="profile-name-section">
                             <p className="welcome-text">Xush kelibsiz!</p>
-                            <h1 className="profile-name">{client.name}</h1>
+                            <h1 className="profile-name">{client.name}Sheroz Turdiyev</h1>
                             <button className="role-badge">Rahbar</button>
                         </div>
                     </div>
@@ -90,6 +88,9 @@ const Employe = () => {
                                 <h2 className="finance-balance">557 000 so'm</h2>
                             </div>
                         </div>
+                        <div className="img">
+                            <img src="/icons/Group 313.svg" alt="#" />
+                        </div>
                     </Card>
                 </div>
             </div>
@@ -98,8 +99,8 @@ const Employe = () => {
                 <Card className="stat-card">
                     <div className="stat-content">
                         <p className="stat-title">
-                            <List className="stat-icon" />
-                            Vazifalar</p>
+                            <img src="/images/Icon2.png" alt="#" />
+                            <span>Vazifalar</span> </p>
                         <h2 className="stat-value">0</h2>
                         <p className="stat-subtitle">Group and individual</p>
                     </div>
@@ -108,8 +109,8 @@ const Employe = () => {
                 <Card className="stat-card">
                     <div className="stat-content">
                         <p className="stat-title">
-                            <Coins className="stat-icon" />
-                            Rasmiy oylik</p>
+                            <img src="/images/Icon3.png" alt="#" />
+                            <span>Rasmiy oylik</span> </p>
                         <h2 className="stat-value">0 <span className="currency">so'm</span></h2>
                         <p className="stat-subtitle">1 218 000 so'm</p>
                     </div>
@@ -118,8 +119,8 @@ const Employe = () => {
                 <Card className="stat-card">
                     <div className="stat-content">
                         <p className="stat-title">
-                            <Calendar className="stat-icon" />
-                            Norasmiy oylik</p>
+                            <img src="/images/Icon4.png" alt="#" />
+                            <span>Norasmiy oylik</span> </p>
                         <h2 className="stat-value">0 <span className="currency">so'm</span></h2>
                         <p className="stat-subtitle">1 218 000 so'm</p>
                     </div>
@@ -128,7 +129,7 @@ const Employe = () => {
 
             <Card className="info-section">
                 <div className="info-header">
-                    <Info className="info-icon" />
+                    <img src="/images/Icon1.png" alt="#" />
                     <h2 className="info-title">Malumotlar</h2>
                 </div>
                 <div className="info-content">
