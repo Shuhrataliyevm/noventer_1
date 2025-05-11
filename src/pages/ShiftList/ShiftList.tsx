@@ -23,7 +23,9 @@ const ShiftList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newShift, setNewShift] = useState({
+    const [isEditing, setIsEditing] = useState(false);  
+    const [currentShiftId, setCurrentShiftId] = useState<number | null>(null);  
+    const [shiftDetails, setShiftDetails] = useState({
         name: "",
         branch: 0,
         branch_name: "",
@@ -70,11 +72,11 @@ const ShiftList = () => {
             .getDate()
             .toString()
             .padStart(2, "0")}-${(date.getMonth() + 1)
-                .toString()
-                .padStart(2, "0")}-${date.getFullYear()} ${date
-                    .getHours()
-                    .toString()
-                    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+            .toString()
+            .padStart(2, "0")}-${date.getFullYear()} ${date
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
     };
 
     const handleDelete = async (id: number) => {
@@ -89,7 +91,7 @@ const ShiftList = () => {
                 }
             );
             alert("Shift deleted successfully!");
-            fetchShifts();
+            fetchShifts(); 
         } catch (error) {
             console.error("Error deleting shift:", error);
         }
@@ -101,7 +103,7 @@ const ShiftList = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setNewShift((prevState) => ({
+        setShiftDetails((prevState) => ({
             ...prevState,
             [name]: value,
         }));
@@ -113,29 +115,57 @@ const ShiftList = () => {
             const access_token = localStorage.getItem("access_token");
 
             const shiftData = {
-                ...newShift,
-                start_time: new Date(newShift.start_time).toISOString(),
-                end_time: new Date(newShift.end_time).toISOString(),
-                created_at: new Date().toISOString(),
+                ...shiftDetails,
+                start_time: new Date(shiftDetails.start_time).toISOString(),
+                end_time: new Date(shiftDetails.end_time).toISOString(),
                 updated_at: new Date().toISOString()
             };
 
-            await axiosInstance.post(
-                "https://api.noventer.uz/api/v1/company/shift-create/",
-                shiftData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`,
-                    },
-                }
-            );
-            alert("Shift added successfully!");
+            if (isEditing && currentShiftId) {
+                await axiosInstance.put(
+                    `https://api.noventer.uz/api/v1/company/shift-detail/${currentShiftId}/`,
+                    shiftData,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${access_token}`,
+                        },
+                    }
+                );
+                alert("Shift updated successfully!");
+            } else {
+                await axiosInstance.post(
+                    "https://api.noventer.uz/api/v1/company/shift-create/",
+                    shiftData,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${access_token}`,
+                        },
+                    }
+                );
+                alert("Shift added successfully!");
+            }
+
             fetchShifts();
-            toggleModal();
+            toggleModal(); 
+            setIsEditing(false);
+            setCurrentShiftId(null); 
         } catch (error) {
-            console.error("Error adding shift:", error);
-            alert("Error adding shift. Please try again.");
+            console.error("Error submitting shift:", error);
+            alert("Error submitting shift. Please try again.");
         }
+    };
+
+    const handleEdit = (shift: Shift) => {
+        setShiftDetails({
+            name: shift.name,
+            branch: shift.branch,
+            branch_name: shift.branch_name,
+            start_time: shift.start_time,
+            end_time: shift.end_time,
+        });
+        setIsEditing(true);
+        setCurrentShiftId(shift.id);
+        toggleModal();
     };
 
     const filteredShifts = shifts.filter((shift) =>
@@ -191,12 +221,12 @@ const ShiftList = () => {
             {isModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h2>Add New Shift</h2>
+                        <h2>{isEditing ? "Edit Shift" : "Add New Shift"}</h2>
                         <form onSubmit={handleSubmit}>
                             <input
                                 type="text"
                                 name="name"
-                                value={newShift.name}
+                                value={shiftDetails.name}
                                 onChange={handleInputChange}
                                 placeholder="Shift Name"
                                 required
@@ -204,7 +234,7 @@ const ShiftList = () => {
                             <input
                                 type="number"
                                 name="branch"
-                                value={newShift.branch}
+                                value={shiftDetails.branch}
                                 onChange={handleInputChange}
                                 placeholder="Branch ID"
                                 required
@@ -212,7 +242,7 @@ const ShiftList = () => {
                             <input
                                 type="text"
                                 name="branch_name"
-                                value={newShift.branch_name}
+                                value={shiftDetails.branch_name}
                                 onChange={handleInputChange}
                                 placeholder="Branch Name"
                                 required
@@ -220,19 +250,19 @@ const ShiftList = () => {
                             <input
                                 type="datetime-local"
                                 name="start_time"
-                                value={newShift.start_time}
+                                value={shiftDetails.start_time}
                                 onChange={handleInputChange}
                                 required
                             />
                             <input
                                 type="datetime-local"
                                 name="end_time"
-                                value={newShift.end_time}
+                                value={shiftDetails.end_time}
                                 onChange={handleInputChange}
                                 required
                             />
                             <div className="modal-buttons">
-                                <button type="submit">Add Shift</button>
+                                <button type="submit">{isEditing ? "Update Shift" : "Add Shift"}</button>
                                 <button type="button" onClick={toggleModal}>Cancel</button>
                             </div>
                         </form>
@@ -265,13 +295,13 @@ const ShiftList = () => {
                                         <div className="button">
                                             <button
                                                 className="edit-btn"
-                                                onClick={() => alert("Edit functionality for shift will go here")}
+                                                onClick={() => handleEdit(shift)}
                                             >
                                                 <img src="/icons/edit-button-image.svg" alt="#" />
                                             </button>
                                             <button
                                                 className="delete-btn"
-                                                onClick={() => handleDelete(shift.id)}
+                                                onClick={() => handleDelete(shift.id)} 
                                             >
                                                 <img src="/icons/delete-button-image.svg" alt="#" />
                                             </button>
