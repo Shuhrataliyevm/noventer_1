@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/employees.scss";
 import Header from "../Header/header";
@@ -45,8 +45,17 @@ const Employees = () => {
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
-    const limit = 10;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        full_name: "",
+        phone_number: "",
+        passport_number: "",
+        birth_date: "",
+        salary_type: "official",
+        gender: "male",
+    });
 
+    const limit = 10;
     const token = localStorage.getItem("access_token");
 
     const fetchEmployees = async () => {
@@ -63,11 +72,39 @@ const Employees = () => {
             setEmployees(res.data.results);
             setCount(res.data.count);
         } catch (error: any) {
-            if (error.response?.status === 401) {
-                console.error("Access token is invalid or expired.");
-            } else {
-                console.error("Error fetching employees:", error);
-            }
+            console.error("Error fetching employees:", error);
+        }
+    };
+
+    const handleAddEmployee = async () => {
+        try {
+            await axios.post(
+                "https://api.noventer.uz/api/v1/employee/employees/",
+                {
+                    user: formData,
+                    user_full_name: formData.full_name,
+                    user_role: "employee",
+                    branch_id: selectedBranch,
+                    department_id: 1,
+                    shift_id: 1,
+                    branch_name: branches.find(b => b.id === selectedBranch)?.name || "",
+                    branch_location: "",
+                    position: "employee",
+                    salary: "0",
+                    official_salary: "0",
+                    start_time: "08:00:00",
+                    end_time: "17:00:00",
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setIsModalOpen(false);
+            fetchEmployees();
+        } catch (err) {
+            console.error("Error adding employee", err);
         }
     };
 
@@ -80,12 +117,9 @@ const Employees = () => {
     );
 
     const toggleSelectAll = () => {
-        if (filtered.length === selectedIds.length) {
-            setSelectedIds([]);
-        } else {
-            const allIds = filtered.map((emp) => emp.id);
-            setSelectedIds(allIds);
-        }
+        setSelectedIds(
+            filtered.length === selectedIds.length ? [] : filtered.map((emp) => emp.id)
+        );
     };
 
     const toggleSelectOne = (id: number) => {
@@ -100,7 +134,9 @@ const Employees = () => {
             <LeftPage />
             <div className="empyese">
                 <div className="filters">
-                    <button className="add-button">+ Xodim qo’shish</button>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>
+                        + Xodim qo’shish
+                    </button>
                     <div className="new">
                         <input
                             type="text"
@@ -119,25 +155,85 @@ const Employees = () => {
                             </option>
                         ))}
                     </select>
-                    <button className="newsbitn">
-                        <img src="/icons/button-svg.svg" alt="#" />
-                    </button>
                 </div>
+
+                {isModalOpen && (
+                    <div className="employee-modal">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h2>Yangi xodim qo‘shish</h2>
+                                <button onClick={() => setIsModalOpen(false)}>×</button>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>F.I.SH</label>
+                                    <input
+                                        type="text"
+                                        value={formData.full_name}
+                                        onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Telefon raqam</label>
+                                    <input
+                                        type="text"
+                                        value={formData.phone_number}
+                                        onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Passport raqami</label>
+                                    <input
+                                        type="text"
+                                        value={formData.passport_number}
+                                        onChange={(e) => setFormData({ ...formData, passport_number: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Tug‘ilgan sana</label>
+                                    <input
+                                        type="date"
+                                        value={formData.birth_date}
+                                        onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Jinsi</label>
+                                    <select
+                                        value={formData.gender}
+                                        onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                                    >
+                                        <option value="male">Erkak</option>
+                                        <option value="female">Ayol</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Maosh turi</label>
+                                    <select
+                                        value={formData.salary_type || "official"}
+                                        onChange={(e) => setFormData({ ...formData, salary_type: e.target.value })}
+                                    >
+                                        <option value="official">Rasmiy</option>
+                                        <option value="unofficial">Norasmiy</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button className="submit-btn" onClick={handleAddEmployee}>
+                                Saqlash
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="table-wrapper">
                     <table className="employees-table">
                         <thead>
                             <tr>
-                                <th>
-                                    <input
-                                        type="checkbox"
-                                        checked={
-                                            filtered.length > 0 &&
-                                            filtered.length === selectedIds.length
-                                        }
-                                        onChange={toggleSelectAll}
-                                    />
-                                </th>
+                                <th><input type="checkbox" checked={filtered.length === selectedIds.length} onChange={toggleSelectAll} /></th>
                                 <th>F.I.SH</th>
                                 <th>ROLE</th>
                                 <th>PHONE</th>
@@ -150,29 +246,17 @@ const Employees = () => {
                         <tbody>
                             {filtered.map((emp) => (
                                 <tr key={emp.id}>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedIds.includes(emp.id)}
-                                            onChange={() => toggleSelectOne(emp.id)}
-                                        />
-                                    </td>
+                                    <td><input type="checkbox" checked={selectedIds.includes(emp.id)} onChange={() => toggleSelectOne(emp.id)} /></td>
                                     <td>
                                         <div className="user-info">
-                                            <img
-                                                src={emp.user.avatar || "/icons/Avatar Images.svg"}
-                                                alt={emp.user.full_name}
-                                                className="employee-avatar"
-                                            />
+                                            <img src={emp.user.avatar || "/icons/Avatar Images.svg"} alt={emp.user.full_name} className="employee-avatar" />
                                             <span className="user-name">{emp.user.full_name}</span>
                                         </div>
                                     </td>
                                     <td>{emp.user_role}</td>
                                     <td>{emp.user.phone_number}</td>
                                     <td>{emp.branch_name}</td>
-                                    <td>
-                                        {emp.start_time} - {emp.end_time}
-                                    </td>
+                                    <td>{emp.start_time} - {emp.end_time}</td>
                                     <td>{emp.user.birth_date}</td>
                                     <td>...</td>
                                 </tr>
@@ -182,33 +266,17 @@ const Employees = () => {
                 </div>
 
                 <div className="pagination">
-                    <button
-                        className="prev"
-                        onClick={() => setPage(page > 1 ? page - 1 : 1)}
-                    >
-                        &lt;
-                    </button>
-
-                    {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1).map(
-                        (num) => (
-                            <button
-                                key={num}
-                                className={num === page ? "active" : ""}
-                                onClick={() => setPage(num)}
-                            >
-                                {num}
-                            </button>
-                        )
-                    )}
-
-                    <button
-                        className="next"
-                        onClick={() =>
-                            setPage(page < Math.ceil(count / limit) ? page + 1 : page)
-                        }
-                    >
-                        &gt;
-                    </button>
+                    <button className="prev" onClick={() => setPage(page > 1 ? page - 1 : 1)}>&lt;</button>
+                    {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1).map((num) => (
+                        <button
+                            key={num}
+                            className={num === page ? "active" : ""}
+                            onClick={() => setPage(num)}
+                        >
+                            {num}
+                        </button>
+                    ))}
+                    <button className="next" onClick={() => setPage(page < Math.ceil(count / limit) ? page + 1 : page)}>&gt;</button>
                 </div>
             </div>
             <Footer />
