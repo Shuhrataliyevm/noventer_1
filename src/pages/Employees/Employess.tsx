@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/employees.scss";
+import Header from "../Header/header";
+import LeftPage from "../LeftPage/leftpage";
+import Footer from "../Footer/footer";
 
 interface Employee {
     id: number;
@@ -20,6 +23,7 @@ interface Employee {
         jshshr: string;
         birth_date: string | null;
         salary_type: string | null;
+        avatar?: string | null;
     };
 }
 
@@ -40,6 +44,7 @@ const Employees = () => {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const limit = 10;
 
     const token = localStorage.getItem("access_token");
@@ -47,7 +52,6 @@ const Employees = () => {
     const fetchEmployees = async () => {
         try {
             const offset = (page - 1) * limit;
-
             const res = await axios.get(
                 `https://api.noventer.uz/api/v1/employee/employees/branch/${selectedBranch}/?limit=${limit}&offset=${offset}`,
                 {
@@ -56,7 +60,6 @@ const Employees = () => {
                     },
                 }
             );
-
             setEmployees(res.data.results);
             setCount(res.data.count);
         } catch (error: any) {
@@ -76,69 +79,117 @@ const Employees = () => {
         emp.user.full_name.toLowerCase().includes(search.toLowerCase())
     );
 
+    const toggleSelectAll = () => {
+        if (filtered.length === selectedIds.length) {
+            setSelectedIds([]);
+        } else {
+            const allIds = filtered.map((emp) => emp.id);
+            setSelectedIds(allIds);
+        }
+    };
+
+    const toggleSelectOne = (id: number) => {
+        setSelectedIds((prev) =>
+            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+        );
+    };
+
     return (
         <div className="employees">
-            <h2>Xodimlar ro'yxati</h2>
-            <div className="filters">
-                <select
-                    value={selectedBranch}
-                    onChange={(e) => setSelectedBranch(Number(e.target.value))}
-                >
-                    {branches.map((b) => (
-                        <option key={b.id} value={b.id}>
-                            {b.name}
-                        </option>
-                    ))}
-                </select>
+            <Header />
+            <LeftPage />
+            <div className="empyese">
+                <div className="filters">
+                    <button>+ Xodim qo’shish</button>
+                    <div className="new">
+                        <input
+                            type="text"
+                            placeholder="Ism bo'yicha qidirish"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                    <select
+                        value={selectedBranch}
+                        onChange={(e) => setSelectedBranch(Number(e.target.value))}
+                    >
+                        {branches.map((b) => (
+                            <option key={b.id} value={b.id}>
+                                {b.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-                <input
-                    type="text"
-                    placeholder="Ism bo'yicha qidirish"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+                <div className="table-wrapper">
+                    <table className="employees-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input
+                                        type="checkbox"
+                                        checked={
+                                            filtered.length > 0 &&
+                                            filtered.length === selectedIds.length
+                                        }
+                                        onChange={toggleSelectAll}
+                                    />
+                                </th>
+                                <th>Rasm</th>
+                                <th>Ism</th>
+                                <th>Tel</th>
+                                <th>Passport</th>
+                                <th>Lavozim</th>
+                                <th>Ish vaqti</th>
+                                <th>Maosh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filtered.map((emp) => (
+                                <tr key={emp.id}>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedIds.includes(emp.id)}
+                                            onChange={() => toggleSelectOne(emp.id)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <img
+                                            src={emp.user.avatar || "/icons/TEXTURE.svg"}
+                                            alt={emp.user.full_name}
+                                            className="employee-avatar"
+                                        />
+                                    </td>
+                                    <td>{emp.user.full_name}</td>
+                                    <td>{emp.user.phone_number}</td>
+                                    <td>{emp.user.passport_number}</td>
+                                    <td>{emp.position}</td>
+                                    <td>
+                                        {emp.start_time} - {emp.end_time}
+                                    </td>
+                                    <td>{emp.salary} so'm</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="pagination">
+                    {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1).map(
+                        (num) => (
+                            <button
+                                key={num}
+                                className={num === page ? "active" : ""}
+                                onClick={() => setPage(num)}
+                            >
+                                {num}
+                            </button>
+                        )
+                    )}
+                </div>
             </div>
-
-            <table className="employees-table">
-                <thead>
-                    <tr>
-                        <th>Ism</th>
-                        <th>Tel</th>
-                        <th>Passport</th>
-                        <th>Lavozim</th>
-                        <th>Ish vaqti</th>
-                        <th>Maosh</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filtered.map((emp) => (
-                        <tr key={emp.id}>
-                            <td>{emp.user.full_name}</td>
-                            <td>{emp.user.phone_number}</td>
-                            <td>{emp.user.passport_number}</td>
-                            <td>{emp.position}</td>
-                            <td>
-                                {emp.start_time} - {emp.end_time}
-                            </td>
-                            <td>{emp.salary} so'm</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            <div className="pagination">
-                {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1).map(
-                    (num) => (
-                        <button
-                            key={num}
-                            className={num === page ? "active" : ""}
-                            onClick={() => setPage(num)}
-                        >
-                            {num}
-                        </button>
-                    )
-                )}
-            </div>
+            <Footer />
         </div>
     );
 };

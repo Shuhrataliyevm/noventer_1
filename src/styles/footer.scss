@@ -7,14 +7,14 @@
     
     .footers {
         width: 1520px;
-        height: 64px;
+        height: 34px;
         border-top: 1px solid #CBD0DD;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 45px;
+        padding: 35px;
         position: absolute;
-        top: 630px;
+        bottom: 0;
 
         .btn {
             display: flex;
