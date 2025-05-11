@@ -16,12 +16,20 @@ interface Shift {
     updated_at: string;
 }
 
-const Shifts = () => {
+const ShiftList = () => {
     const [shifts, setShifts] = useState<Shift[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [branchFilter, setBranchFilter] = useState<number | "">("");
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newShift, setNewShift] = useState({
+        name: "",
+        branch: 0,
+        branch_name: "",
+        start_time: "",
+        end_time: ""
+    });
 
     const axiosInstance = axios.create({
         baseURL: "https://api.noventer.uz/api/v1",
@@ -34,31 +42,6 @@ const Shifts = () => {
         }
         return config;
     });
-
-    axiosInstance.interceptors.response.use(
-        (res) => res,
-        async (error) => {
-            const originalRequest = error.config;
-            if (error.response?.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true;
-                const refreshToken = localStorage.getItem("refresh_token");
-
-                try {
-                    const { data } = await axios.post(
-                        "https://api.noventer.uz/api/v1/auth/jwt/refresh/",
-                        { refresh: refreshToken }
-                    );
-                    localStorage.setItem("access_token", data.access);
-                    originalRequest.headers.Authorization = `Bearer ${data.access}`;
-                    return axios(originalRequest);
-                } catch (err) {
-                    console.error("Refresh token expired or error:", err);
-                    return Promise.reject(err);
-                }
-            }
-            return Promise.reject(error);
-        }
-    );
 
     const fetchShifts = async () => {
         try {
@@ -95,28 +78,64 @@ const Shifts = () => {
     };
 
     const handleDelete = async (id: number) => {
-        const confirmed = window.confirm("Are you sure you want to delete this shift?");
-        if (confirmed) {
-            try {
-                const access_token = localStorage.getItem("access_token");
-                await axiosInstance.delete(
-                    `https://api.noventer.uz/api/v1/company/shifts/${id}/`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${access_token}`,
-                        },
-                    }
-                );
-                alert("Shift deleted successfully!");
-                fetchShifts();
-            } catch (error) {
-                console.error("Error deleting shift:", error);
-            }
+        try {
+            const access_token = localStorage.getItem("access_token");
+            await axiosInstance.delete(
+                `https://api.noventer.uz/api/v1/company/shift-detail/${id}/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`,
+                    },
+                }
+            );
+            alert("Shift deleted successfully!");
+            fetchShifts();
+        } catch (error) {
+            console.error("Error deleting shift:", error);
         }
     };
 
-    const handleEdit = (id: number) => {
-        alert(`Edit functionality for shift ${id} would go here.`);
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setNewShift((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const access_token = localStorage.getItem("access_token");
+
+            const shiftData = {
+                ...newShift,
+                start_time: new Date(newShift.start_time).toISOString(),
+                end_time: new Date(newShift.end_time).toISOString(),
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+
+            await axiosInstance.post(
+                "https://api.noventer.uz/api/v1/company/shift-create/",
+                shiftData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`,
+                    },
+                }
+            );
+            alert("Shift added successfully!");
+            fetchShifts();
+            toggleModal();
+        } catch (error) {
+            console.error("Error adding shift:", error);
+            alert("Error adding shift. Please try again.");
+        }
     };
 
     const filteredShifts = shifts.filter((shift) =>
@@ -165,9 +184,61 @@ const Shifts = () => {
                     </select>
                 </form>
                 <div className="add-btn">
-                    <button>+ Smena</button>
+                    <button onClick={toggleModal}>+ Smena</button>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Add New Shift</h2>
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                type="text"
+                                name="name"
+                                value={newShift.name}
+                                onChange={handleInputChange}
+                                placeholder="Shift Name"
+                                required
+                            />
+                            <input
+                                type="number"
+                                name="branch"
+                                value={newShift.branch}
+                                onChange={handleInputChange}
+                                placeholder="Branch ID"
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="branch_name"
+                                value={newShift.branch_name}
+                                onChange={handleInputChange}
+                                placeholder="Branch Name"
+                                required
+                            />
+                            <input
+                                type="datetime-local"
+                                name="start_time"
+                                value={newShift.start_time}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <input
+                                type="datetime-local"
+                                name="end_time"
+                                value={newShift.end_time}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <div className="modal-buttons">
+                                <button type="submit">Add Shift</button>
+                                <button type="button" onClick={toggleModal}>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             <div className="newtable">
                 <div className="shifts-table">
@@ -194,7 +265,7 @@ const Shifts = () => {
                                         <div className="button">
                                             <button
                                                 className="edit-btn"
-                                                onClick={() => handleEdit(shift.id)}
+                                                onClick={() => alert("Edit functionality for shift will go here")}
                                             >
                                                 <img src="/icons/edit-button-image.svg" alt="#" />
                                             </button>
@@ -218,4 +289,4 @@ const Shifts = () => {
     );
 };
 
-export default Shifts;
+export default ShiftList;

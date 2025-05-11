@@ -47,13 +47,14 @@ const Employees = () => {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({
-        full_name: "",
-        phone_number: "",
-        passport_number: "",
-        birth_date: "",
-        salary_type: "official",
-        gender: "male",
-    });
+    full_name: "",
+    phone_number: "",
+    passport_number: "",
+    birth_date: "",
+    salary_type: "official",
+    gender: "male",
+    jshshr: "", // 🔥 SHU YER YETISHMAYAPTI
+});
 
     const limit = 10;
     const token = localStorage.getItem("access_token");
@@ -81,7 +82,16 @@ const Employees = () => {
             await axios.post(
                 "https://api.noventer.uz/api/v1/employee/employees/",
                 {
-                    user: formData,
+                    user: {
+                        full_name: formData.full_name,
+                        phone_number: formData.phone_number,
+                        passport_number: formData.passport_number,
+                        birth_date: formData.birth_date,
+                        gender: formData.gender,
+                        salary_type: formData.salary_type,
+                        jshshr: formData.jshshr,
+                        avatar: null,
+                    },
                     user_full_name: formData.full_name,
                     user_role: "employee",
                     branch_id: selectedBranch,
@@ -107,6 +117,7 @@ const Employees = () => {
             console.error("Error adding employee", err);
         }
     };
+
 
     useEffect(() => {
         fetchEmployees();
