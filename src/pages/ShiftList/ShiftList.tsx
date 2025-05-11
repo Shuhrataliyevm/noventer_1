@@ -165,7 +165,7 @@ const Shifts = () => {
                     </select>
                 </form>
                 <div className="add-btn">
-                    <button>+ Add Shift</button>
+                    <button>+ Smena</button>
                 </div>
             </div>
 

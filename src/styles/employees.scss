@@ -3,7 +3,7 @@
 
     .empyese {
         width: 1220px;
-        height: 662px;
+        height: 640px;
         position: absolute;
         top: 50px;
         right: 50px;
@@ -27,30 +27,81 @@
             input {
                 width: 320px;
                 height: 38px;
-                flex: 1;
-                position: relative;
-                left: 250px;
                 padding: 8px;
                 border-radius: 4px;
                 border: 1px solid #CBD0DD;
                 font-size: 14px;
                 color: #8A94AD;
+                position: relative;
+                left: 300px;
 
-
-                select {
-                    height: 38px;
-                    border-radius: 6px;
-                    border: 1px solid #CBD0DD;
-                    color: #8A94AD;
-                    width: 200px;
+                &:focus {
+                    outline: none;
+                    border-color: #CBD0DD;
+                    box-shadow: 0 0 0 2px rgba(56, 116, 255, 0.2);
                 }
             }
-
-
         }
     }
 
+    .add-button {
+        width: 142px;
+        height: 38px;
+        border-radius: 6px;
+        background-color: #3874FF;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+
+        &:active {
+            background-color: #2a5bb8;
+        }
+    }
+
+    .newsbitn {
+        width: 45px;
+        height: 38px;
+        border: 1px solid #CBD0DD;
+        border-radius: 6px;
+        background-color: #F5F7FA;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        justify-content: center;
+    }
+
+    select {
+        height: 38px;
+        border-radius: 6px;
+        border: 1px solid #CBD0DD;
+        color: #8A94AD;
+        width: 200px;
+        position: relative;
+        cursor: pointer;
+        left: 150px;
+
+        &:focus {
+            outline: none;
+            border-color: #CBD0DD;
+            box-shadow: 0 0 0 2px rgba(56, 116, 255, 0.2);
+        }
+    }
+
+    .table-wrapper {
+        flex: 1;
+        overflow-y: auto;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
     .employees-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+
         input[type="checkbox"] {
             width: 16px;
             height: 16px;
@@ -60,20 +111,6 @@
         tr.selected {
             background-color: #e0f7fa;
         }
-    }
-
-
-    .table-wrapper {
-        flex: 1;
-        overflow-y: auto;
-        border: 1px solid #e0e0e0;
-        border-radius: 6px;
-    }
-
-    .employees-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 800px;
 
         th,
         td {
@@ -101,24 +138,46 @@
     .pagination {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 10px;
-        margin-top: 10px;
 
         button {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            background-color: #f4f4f4;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            top: -20px;
+            left: 500px;
             cursor: pointer;
 
+
             &.active {
-                background-color: #4CAF50;
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                border: none;
+                font-size: 12px;
+                background-color: #3874FF;
                 color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
-            &:hover {
-                background-color: #ddd;
+            &.prev,
+            &.next {
+                background-color: white;
+                border: none;
+                color: #9FA6BC;
+                font-size: 18px;
+                width: 40px;
             }
         }
     }
+
 }

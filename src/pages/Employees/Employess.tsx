@@ -100,7 +100,7 @@ const Employees = () => {
             <LeftPage />
             <div className="empyese">
                 <div className="filters">
-                    <button>+ Xodim qo’shish</button>
+                    <button className="add-button">+ Xodim qo’shish</button>
                     <div className="new">
                         <input
                             type="text"
@@ -119,6 +119,9 @@ const Employees = () => {
                             </option>
                         ))}
                     </select>
+                    <button className="newsbitn">
+                        <img src="/icons/button-svg.svg" alt="#" />
+                    </button>
                 </div>
 
                 <div className="table-wrapper">
@@ -135,13 +138,13 @@ const Employees = () => {
                                         onChange={toggleSelectAll}
                                     />
                                 </th>
-                                <th>Rasm</th>
-                                <th>Ism</th>
-                                <th>Tel</th>
-                                <th>Passport</th>
-                                <th>Lavozim</th>
-                                <th>Ish vaqti</th>
-                                <th>Maosh</th>
+                                <th>F.I.SH</th>
+                                <th>ROLE</th>
+                                <th>PHONE</th>
+                                <th>ISHGA QABUL QILUVCHI FILIAL</th>
+                                <th>SMENASI</th>
+                                <th>TUG‘ILGAN SANA</th>
+                                <th>...</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -155,20 +158,23 @@ const Employees = () => {
                                         />
                                     </td>
                                     <td>
-                                        <img
-                                            src={emp.user.avatar || "/icons/TEXTURE.svg"}
-                                            alt={emp.user.full_name}
-                                            className="employee-avatar"
-                                        />
+                                        <div className="user-info">
+                                            <img
+                                                src={emp.user.avatar || "/icons/Avatar Images.svg"}
+                                                alt={emp.user.full_name}
+                                                className="employee-avatar"
+                                            />
+                                            <span className="user-name">{emp.user.full_name}</span>
+                                        </div>
                                     </td>
-                                    <td>{emp.user.full_name}</td>
+                                    <td>{emp.user_role}</td>
                                     <td>{emp.user.phone_number}</td>
-                                    <td>{emp.user.passport_number}</td>
-                                    <td>{emp.position}</td>
+                                    <td>{emp.branch_name}</td>
                                     <td>
                                         {emp.start_time} - {emp.end_time}
                                     </td>
-                                    <td>{emp.salary} so'm</td>
+                                    <td>{emp.user.birth_date}</td>
+                                    <td>...</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -176,6 +182,13 @@ const Employees = () => {
                 </div>
 
                 <div className="pagination">
+                    <button
+                        className="prev"
+                        onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                    >
+                        &lt;
+                    </button>
+
                     {Array.from({ length: Math.ceil(count / limit) }, (_, i) => i + 1).map(
                         (num) => (
                             <button
@@ -187,6 +200,15 @@ const Employees = () => {
                             </button>
                         )
                     )}
+
+                    <button
+                        className="next"
+                        onClick={() =>
+                            setPage(page < Math.ceil(count / limit) ? page + 1 : page)
+                        }
+                    >
+                        &gt;
+                    </button>
                 </div>
             </div>
             <Footer />
