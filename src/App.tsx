@@ -12,6 +12,7 @@ import Employe from './pages/Employe/employe';
 import Clients from './pages/Clients/Clients';
 import ShiftList from './pages/ShiftList/ShiftList';
 import Staff from './pages/Staff/Staff';
+import Employees from './pages/Employees/Employess';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -82,6 +83,14 @@ const App = () => {
                     element={
                         <ProtectedRoute>
                             <Staff />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/employees"
+                    element={
+                        <ProtectedRoute>
+                            <Employees />
                         </ProtectedRoute>
                     }
                 />

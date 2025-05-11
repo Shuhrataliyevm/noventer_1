@@ -87,11 +87,11 @@ const Shifts = () => {
             .getDate()
             .toString()
             .padStart(2, "0")}-${(date.getMonth() + 1)
-            .toString()
-            .padStart(2, "0")}-${date.getFullYear()} ${date
-            .getHours()
-            .toString()
-            .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+                .toString()
+                .padStart(2, "0")}-${date.getFullYear()} ${date
+                    .getHours()
+                    .toString()
+                    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
     };
 
     const handleDelete = async (id: number) => {
@@ -108,7 +108,7 @@ const Shifts = () => {
                     }
                 );
                 alert("Shift deleted successfully!");
-                fetchShifts(); 
+                fetchShifts();
             } catch (error) {
                 console.error("Error deleting shift:", error);
             }

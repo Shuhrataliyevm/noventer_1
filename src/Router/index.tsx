@@ -12,6 +12,7 @@ import Employe from "../pages/Employe/employe";
 import Clients from "../pages/Clients/Clients";
 import ShiftList from "../pages/ShiftList/ShiftList";
 import Staff from "../pages/Staff/Staff";
+import Employees from "../pages/Employees/Employess";
 
 const Router = () => {
     return (
@@ -25,6 +26,7 @@ const Router = () => {
             <Route path="/clients" element={<Clients />} />
             <Route path="/shiftlist" element={<ShiftList />} />
             <Route path="/staff" element={<Staff />} />
+            <Route path="/employees" element={<Employees />} />
 
             <Route path="/" element={<PrivateRoute />}>
                 <Route path="/login" element={<Login />} />
