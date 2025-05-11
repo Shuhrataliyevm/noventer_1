@@ -4,6 +4,7 @@
     border-radius: 8px;
     overflow: hidden;
     margin: 0 auto;
+
 }
 
 .clients-table {
@@ -75,7 +76,7 @@
         color: white;
         cursor: pointer;
         position: relative;
-        top: -20px;
+        top: -30px;
         transition: background-color 0.3s ease;
 
         &:hover {
@@ -170,9 +171,8 @@ tbody tr {
             color: #3874FF;
         }
     }
+
 }
-
-
 
 
 .client-pagination {
@@ -213,4 +213,108 @@ tbody tr {
             cursor: not-allowed;
         }
     }
+
+}
+
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    width: 500px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+    animation: modalIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.modal-content button {
+    display: flex;
+    padding: 10px 20px;
+    background-color: #3874FF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #2864D9;
+}
+
+button {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+button:hover {
+    color: #3874FF;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.image-preview-container {
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-preview-container:hover {
+    opacity: 0.8;
 }

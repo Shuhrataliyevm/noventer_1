@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import "../../styles/clients.scss";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../../styles/clients.scss";
 import Header from "../Header/header";
 import Footer from "../Footer/footer";
 import LeftPage from "../LeftPage/leftpage";
@@ -56,6 +56,119 @@ const Avatar = ({
     );
 };
 
+const AddClientModal = ({
+    isOpen,
+    closeModal,
+    onAddClient,
+}: {
+    isOpen: boolean;
+    closeModal: () => void;
+    onAddClient: (newClient: Client) => void;
+}) => {
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [branch, setBranch] = useState(0);
+    const [avatar, setAvatar] = useState(""); 
+    const [licenseFile, setLicenseFile] = useState("");
+    const [imagePreview, setImagePreview] = useState<string | null>(null); 
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string); 
+                setAvatar(file.name); 
+            };
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post("https://api.noventer.uz/api/v1/company/clients/", {
+                name,
+                phone,
+                branch,
+                avatar,
+                license_file: licenseFile,
+            });
+
+            const newClient = response.data;
+            onAddClient(newClient);
+            closeModal();
+        } catch (error) {
+            console.error("Error adding client:", error);
+        }
+    };
+
+    if (!isOpen) return null; 
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h2>Client Add Form</h2>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Name:
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Phone:
+                        <input
+                            type="text"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Branch:
+                        <input
+                            type="number"
+                            value={branch}
+                            onChange={(e) => setBranch(parseInt(e.target.value))}
+                            required
+                        />
+                    </label>
+
+                    <label>
+                        Avatar (Upload Image):
+                        <input
+                            type="file"
+                            onChange={handleImageChange}
+                            accept="image/*"
+                            style={{ display: "block", marginBottom: "10px" }}
+                        />
+                        {imagePreview && (
+                            <div className="image-preview-container">
+                                <img src={imagePreview} alt="Preview" className="image-preview" />
+                            </div>
+                        )}
+                    </label>
+
+                    <label>
+                        License File URL:
+                        <input
+                            type="text"
+                            value={licenseFile}
+                            onChange={(e) => setLicenseFile(e.target.value)}
+                        />
+                    </label>
+
+                    <button type="submit">Add Client</button>
+                </form>
+                <button onClick={closeModal}>Close</button>
+            </div>
+        </div>
+    );
+};
+
 const Clients = () => {
     const [clients, setClients] = useState<Client[]>([]);
     const [filteredClients, setFilteredClients] = useState<Client[]>([]);
@@ -64,6 +177,8 @@ const Clients = () => {
     const [selectedClients, setSelectedClients] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [branchIdFilter, setBranchIdFilter] = useState<number | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+
     const pageSize = 10;
 
     useEffect(() => {
@@ -73,18 +188,6 @@ const Clients = () => {
                 setClients(response.data.results);
             } catch (error) {
                 console.error("Error fetching clients:", error);
-                const mockClients: Client[] = Array(30).fill(null).map((_, index) => ({
-                    id: index + 1,
-                    branch: index % 3,
-                    branch_name: ["Head Office", "Branch A", "Branch B"][index % 3],
-                    name: `Carry Anna ${index + 1}`,
-                    phone: "+998 (93) 954-21-11",
-                    avatar: `https://i.pravatar.cc/100?img=${index + 10}`,
-                    license_file: null,
-                    created_at: "2025-02-01T08:56:00",
-                    updated_at: "2025-02-01T08:56:00",
-                }));
-                setClients(mockClients);
             }
         };
 
@@ -136,6 +239,10 @@ const Clients = () => {
                 .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
     };
 
+    const handleAddClient = (newClient: Client) => {
+        setClients((prevClients) => [...prevClients, newClient]);
+    };
+
     return (
         <div className="clients-container">
             <Header />
@@ -162,7 +269,7 @@ const Clients = () => {
                         </div>
                     </form>
                     <div className="add-btn">
-                        <button>+ Mijoz qo'shish</button>
+                        <button onClick={() => setIsModalOpen(true)}>+ Mijoz qo'shish</button>
                     </div>
                 </div>
             </div>
@@ -211,6 +318,7 @@ const Clients = () => {
                         ))}
                     </tbody>
                 </table>
+
                 <div className="with">
                     <div className="with-text">
                         <p>1 to 10 Items of 15 <span>View all {">"} </span></p>
@@ -242,8 +350,13 @@ const Clients = () => {
                         </button>
                     </div>
                 </div>
-
             </div>
+
+            <AddClientModal
+                isOpen={isModalOpen}
+                closeModal={() => setIsModalOpen(false)}
+                onAddClient={handleAddClient}
+            />
 
             <Footer />
         </div>
